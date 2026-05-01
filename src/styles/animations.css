@@ -1,0 +1,365 @@
+/* ============================================================
+   PORTFOLIO ANIMATIONS
+   All animations use cubic-bezier or ease-in-out for smoothness
+   ============================================================ */
+
+
+/* ----------------------------------------------------------
+   1. GLITCH TEXT — RGB channel-split effect for hero name
+   ---------------------------------------------------------- */
+@keyframes glitchText {
+  0%, 100% {
+    text-shadow: none;
+    transform: translate(0);
+    clip-path: none;
+  }
+  10% {
+    text-shadow:
+      -3px 0 2px rgba(255, 0, 80, 0.85),
+       3px 0 2px rgba(0, 220, 255, 0.85);
+    transform: translate(-2px, 0) skewX(-1deg);
+    clip-path: polygon(0 15%, 100% 15%, 100% 35%, 0 35%);
+  }
+  12% {
+    text-shadow:
+       3px 0 2px rgba(255, 0, 80, 0.85),
+      -3px 0 2px rgba(0, 220, 255, 0.85);
+    transform: translate(2px, 0) skewX(1deg);
+    clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%);
+  }
+  14%, 94% {
+    text-shadow: none;
+    transform: translate(0);
+    clip-path: none;
+  }
+  95% {
+    text-shadow:
+      -2px 0 1px rgba(255, 0, 80, 0.7),
+       2px 0 1px rgba(0, 220, 255, 0.7);
+    transform: translate(-1px, 1px);
+  }
+  97% {
+    text-shadow:
+       2px 0 1px rgba(255, 0, 80, 0.7),
+      -2px 0 1px rgba(0, 220, 255, 0.7);
+    transform: translate(1px, -1px);
+  }
+}
+
+.animate-glitch {
+  animation: glitchText 4s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+  position: relative;
+  display: inline-block;
+}
+
+
+/* ----------------------------------------------------------
+   2. SHIMMER — left-to-right shine sweep for buttons
+   ---------------------------------------------------------- */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.45) 50%,
+    transparent 70%
+  ) center / 200% auto;
+  animation: shimmer 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Full shimmer button — set on the button element itself */
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+
+/* ----------------------------------------------------------
+   3. FLOAT UP — gentle perpetual upward float for elements
+   ---------------------------------------------------------- */
+@keyframes floatUp {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+.animate-float {
+  animation: floatUp 3.5s ease-in-out infinite;
+}
+.animate-float-slow {
+  animation: floatUp 5s ease-in-out infinite;
+}
+.animate-float-fast {
+  animation: floatUp 2s ease-in-out infinite;
+}
+
+
+/* ----------------------------------------------------------
+   4. ROTATE BORDER — spinning conic-gradient border for profile photo
+   ---------------------------------------------------------- */
+@keyframes rotateBorder {
+  from { --border-angle: 0deg; }
+  to   { --border-angle: 360deg; }
+}
+
+@property --border-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.animate-rotate-border {
+  border: 3px solid transparent;
+  background:
+    linear-gradient(var(--bg-color, #fff), var(--bg-color, #fff)) padding-box,
+    conic-gradient(
+      from var(--border-angle),
+      #6366f1 0%,
+      #a855f7 25%,
+      #ec4899 50%,
+      #6366f1 75%,
+      #a855f7 100%
+    ) border-box;
+  animation: rotateBorder 3s linear infinite;
+}
+
+/* Dark mode variant — override --bg-color via inline style or Tailwind */
+.dark .animate-rotate-border {
+  --bg-color: #030712;
+}
+
+
+/* ----------------------------------------------------------
+   5. FADE IN STAGGER — fade + slide up for list items
+   ---------------------------------------------------------- */
+@keyframes fadeInStagger {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-stagger > * {
+  opacity: 0;
+  animation: fadeInStagger 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.animate-stagger > *:nth-child(1)  { animation-delay: 0.05s; }
+.animate-stagger > *:nth-child(2)  { animation-delay: 0.12s; }
+.animate-stagger > *:nth-child(3)  { animation-delay: 0.19s; }
+.animate-stagger > *:nth-child(4)  { animation-delay: 0.26s; }
+.animate-stagger > *:nth-child(5)  { animation-delay: 0.33s; }
+.animate-stagger > *:nth-child(6)  { animation-delay: 0.40s; }
+.animate-stagger > *:nth-child(7)  { animation-delay: 0.47s; }
+.animate-stagger > *:nth-child(8)  { animation-delay: 0.54s; }
+
+/* Standalone stagger item — use when parent can't carry the class */
+.stagger-item {
+  opacity: 0;
+  animation: fadeInStagger 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+
+/* ----------------------------------------------------------
+   6. PULSE GLOW — glowing pulse for skill icons
+   ---------------------------------------------------------- */
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 4px 1px rgba(99, 102, 241, 0.3);
+    filter: brightness(1);
+  }
+  50% {
+    box-shadow: 0 0 16px 4px rgba(99, 102, 241, 0.75);
+    filter: brightness(1.2);
+  }
+}
+
+@keyframes pulseGlowText {
+  0%, 100% { text-shadow: 0 0 4px rgba(99, 102, 241, 0.4); }
+  50%       { text-shadow: 0 0 16px rgba(99, 102, 241, 0.9), 0 0 32px rgba(168, 85, 247, 0.5); }
+}
+
+.animate-pulse-glow       { animation: pulseGlow     2.2s ease-in-out infinite; }
+.animate-pulse-glow-text  { animation: pulseGlowText 2.2s ease-in-out infinite; }
+
+
+/* ----------------------------------------------------------
+   7. DRAW LINE — SVG / pseudo-element line drawing for timeline
+   ---------------------------------------------------------- */
+@keyframes drawLine {
+  from {
+    transform: scaleY(0);
+    transform-origin: top center;
+  }
+  to {
+    transform: scaleY(1);
+    transform-origin: top center;
+  }
+}
+
+@keyframes drawLineH {
+  from {
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+  to {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+}
+
+.animate-draw-line   { animation: drawLine  0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.animate-draw-line-h { animation: drawLineH 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+
+/* ----------------------------------------------------------
+   8. TYPEWRITER — blinking cursor for typewriter text
+   ---------------------------------------------------------- */
+@keyframes typewriter {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+@keyframes cursorBlink {
+  0%, 100% { border-right-color: currentColor; }
+  50%       { border-right-color: transparent; }
+}
+
+.animate-typewriter {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid currentColor;
+  animation:
+    typewriter   2.4s steps(30, end) forwards,
+    cursorBlink  0.75s step-end infinite;
+}
+
+/* Cursor only — for a separate blinking caret element */
+.animate-cursor-blink {
+  display: inline-block;
+  width: 2px;
+  animation: cursorBlink 0.75s step-end infinite;
+}
+
+
+/* ----------------------------------------------------------
+   9. PARTICLE FLOAT — random drifting for background particles
+   ---------------------------------------------------------- */
+@keyframes particleFloat {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    opacity: 0;
+  }
+  10% { opacity: 1; }
+  90% { opacity: 0.6; }
+  100% {
+    transform: translate(var(--drift-x, 40px), var(--drift-y, -80px)) rotate(360deg) scale(0.6);
+    opacity: 0;
+  }
+}
+
+.animate-particle {
+  animation: particleFloat var(--duration, 6s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+/* Preset variants with different drift paths */
+.particle-1  { --drift-x:  30px; --drift-y:  -90px; --duration: 5.5s; --delay: 0.0s; }
+.particle-2  { --drift-x: -50px; --drift-y:  -70px; --duration: 7.0s; --delay: 0.8s; }
+.particle-3  { --drift-x:  60px; --drift-y: -110px; --duration: 6.2s; --delay: 1.4s; }
+.particle-4  { --drift-x: -20px; --drift-y:  -60px; --duration: 4.8s; --delay: 2.1s; }
+.particle-5  { --drift-x:  45px; --drift-y:  -85px; --duration: 8.0s; --delay: 0.5s; }
+.particle-6  { --drift-x: -65px; --drift-y: -100px; --duration: 6.8s; --delay: 3.0s; }
+
+
+/* ----------------------------------------------------------
+   10. TILT CARD — smooth 3D perspective tilt for project cards
+    Apply to the wrapper; JS can update --rotateX/--rotateY via
+    onMouseMove for interactive tilt, or use CSS-only hover below.
+   ---------------------------------------------------------- */
+@keyframes tiltCard {
+  0%, 100% { transform: perspective(800px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1); }
+  25%       { transform: perspective(800px) rotateX(4deg) rotateY(-4deg) scale3d(1.02, 1.02, 1.02); }
+  75%       { transform: perspective(800px) rotateX(-4deg) rotateY(4deg) scale3d(1.02, 1.02, 1.02); }
+}
+
+.animate-tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.03, 0.98, 0.52, 0.99),
+              box-shadow 0.4s ease;
+  will-change: transform;
+}
+
+/* CSS-only hover tilt — no JS needed */
+.animate-tilt-card:hover {
+  transform: perspective(800px) rotateX(4deg) rotateY(-4deg) scale3d(1.03, 1.03, 1.03);
+  box-shadow:
+    8px 16px 40px rgba(99, 102, 241, 0.2),
+    0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* JS-driven interactive tilt — set via style attribute */
+.tilt-live {
+  transform-style: preserve-3d;
+  transform:
+    perspective(800px)
+    rotateX(var(--rotateX, 0deg))
+    rotateY(var(--rotateY, 0deg))
+    scale3d(1.02, 1.02, 1.02);
+  transition: transform 0.12s cubic-bezier(0.03, 0.98, 0.52, 0.99);
+  will-change: transform;
+}
+
+/* Card inner content lifts forward in 3D */
+.tilt-live .tilt-content {
+  transform: translateZ(30px);
+  transition: transform 0.12s cubic-bezier(0.03, 0.98, 0.52, 0.99);
+}
+
+
+/* ----------------------------------------------------------
+   SHARED UTILITY — delay helpers (works with any animation)
+   ---------------------------------------------------------- */
+.delay-75  { animation-delay: 0.075s; }
+.delay-100 { animation-delay: 0.1s;   }
+.delay-150 { animation-delay: 0.15s;  }
+.delay-200 { animation-delay: 0.2s;   }
+.delay-300 { animation-delay: 0.3s;   }
+.delay-400 { animation-delay: 0.4s;   }
+.delay-500 { animation-delay: 0.5s;   }
+.delay-700 { animation-delay: 0.7s;   }
+.delay-1000{ animation-delay: 1.0s;   }
+
+/* Pauses all animations for reduced-motion users */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
