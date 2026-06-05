@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { FiMenu, FiX } from 'react-icons/fi';
+import { motion } from 'framer-motion';
+import { FiMenu, FiX, FiSun, FiMoon } from 'react-icons/fi';
+import { useTheme } from '../context/ThemeContext';
 import '../styles/animations.css';
 
 const NAV_LINKS = [
@@ -11,30 +13,27 @@ const NAV_LINKS = [
   { label: 'Contact',    href: '#contact'    },
 ];
 
-/* Section ids matched to nav labels for Intersection Observer */
 const SECTION_IDS = ['hero', 'about', 'skills', 'projects', 'experience', 'contact'];
 
 export default function Navbar() {
+  const { dark, toggle } = useTheme();
   const [menuOpen,   setMenuOpen]   = useState(false);
   const [scrolled,   setScrolled]   = useState(false);
   const [activeId,   setActiveId]   = useState('hero');
-  const [visible,    setVisible]    = useState(false);       // slide-down on mount
+  const [visible,    setVisible]    = useState(false);
   const observerRef = useRef(null);
 
-  /* Slide down on first render */
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 60);
     return () => clearTimeout(t);
   }, []);
 
-  /* Glass effect on scroll */
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  /* Intersection Observer — highlight active section */
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
       (entries) => {
@@ -44,18 +43,15 @@ export default function Navbar() {
       },
       { rootMargin: '-40% 0px -55% 0px', threshold: 0 }
     );
-
     SECTION_IDS.forEach((id) => {
       const el = document.getElementById(id);
       if (el) observerRef.current.observe(el);
     });
-
     return () => observerRef.current?.disconnect();
   }, []);
 
   const handleLinkClick = (href) => {
     setMenuOpen(false);
-    /* Smooth scroll fallback for older browsers */
     const target = document.querySelector(href);
     if (target) target.scrollIntoView({ behavior: 'smooth' });
   };
@@ -70,7 +66,7 @@ export default function Navbar() {
       className={[
         'fixed top-0 left-0 w-full z-50',
         scrolled
-          ? 'bg-gray-950/80 backdrop-blur-md border-b border-white/10 shadow-lg shadow-black/20'
+          ? 'bg-white/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-gray-200 dark:border-white/10 shadow-lg shadow-black/10 dark:shadow-black/20'
           : 'bg-transparent border-b border-transparent',
         'transition-[background-color,border-color,box-shadow] duration-400',
       ].join(' ')}
@@ -81,9 +77,9 @@ export default function Navbar() {
         <a
           href="#hero"
           onClick={() => handleLinkClick('#hero')}
-          className="animate-pulse-glow-text text-xl font-extrabold text-indigo-400 tracking-tight select-none"
+          className="animate-pulse-glow-text text-xl font-extrabold text-indigo-500 dark:text-indigo-400 tracking-tight select-none"
         >
-          Gokul <span className="text-white">P</span>
+          Gokul <span className="text-gray-900 dark:text-white">P</span>
         </a>
 
         {/* Desktop links */}
@@ -99,15 +95,14 @@ export default function Navbar() {
                   className={[
                     'relative px-3 py-1.5 text-sm font-medium rounded-lg transition-colors duration-200 group',
                     isActive
-                      ? 'text-indigo-400'
-                      : 'text-gray-400 hover:text-white',
+                      ? 'text-indigo-500 dark:text-indigo-400'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white',
                   ].join(' ')}
                 >
                   {label}
-                  {/* Animated underline */}
                   <span
                     className={[
-                      'absolute bottom-0 left-3 right-3 h-px rounded-full bg-indigo-400 transition-all duration-300 origin-left',
+                      'absolute bottom-0 left-3 right-3 h-px rounded-full bg-indigo-500 dark:bg-indigo-400 transition-all duration-300 origin-left',
                       isActive ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0 group-hover:scale-x-100 group-hover:opacity-60',
                     ].join(' ')}
                   />
@@ -117,15 +112,28 @@ export default function Navbar() {
           })}
         </ul>
 
-        {/* Mobile hamburger */}
-        <button
-          className="md:hidden p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
-          onClick={() => setMenuOpen((o) => !o)}
-          aria-label="Toggle menu"
-          aria-expanded={menuOpen}
-        >
-          {menuOpen ? <FiX size={22} /> : <FiMenu size={22} />}
-        </button>
+        <div className="flex items-center gap-2">
+          {/* Theme toggle */}
+          <motion.button
+            onClick={toggle}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+            className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-indigo-500 dark:hover:text-indigo-400 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
+          >
+            {dark ? <FiSun size={18} /> : <FiMoon size={18} />}
+          </motion.button>
+
+          {/* Mobile hamburger */}
+          <button
+            className="md:hidden p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-label="Toggle menu"
+            aria-expanded={menuOpen}
+          >
+            {menuOpen ? <FiX size={22} /> : <FiMenu size={22} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile dropdown */}
@@ -136,7 +144,7 @@ export default function Navbar() {
           transition: 'max-height 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease',
           overflow:   'hidden',
         }}
-        className="md:hidden bg-gray-950/95 backdrop-blur-md border-t border-white/10"
+        className="md:hidden bg-white/95 dark:bg-gray-950/95 backdrop-blur-md border-t border-gray-200 dark:border-white/10"
       >
         <ul className="flex flex-col px-6 py-4 gap-1">
           {NAV_LINKS.map(({ label, href }) => {
@@ -150,12 +158,12 @@ export default function Navbar() {
                   className={[
                     'flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200',
                     isActive
-                      ? 'text-indigo-400 bg-indigo-500/10'
-                      : 'text-gray-400 hover:text-white hover:bg-white/5',
+                      ? 'text-indigo-500 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/10'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5',
                   ].join(' ')}
                 >
                   {isActive && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 flex-shrink-0" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 dark:bg-indigo-400 shrink-0" />
                   )}
                   {label}
                 </a>
