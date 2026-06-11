@@ -189,7 +189,7 @@ export default function Hero() {
               style={{ '--bg-color': 'var(--hero-bg, #030712)' }}
             >
               <div className="w-56 h-56 md:w-72 md:h-72 rounded-full bg-linear-to-br from-indigo-600 to-purple-600 flex items-center justify-center overflow-hidden shadow-2xl shadow-indigo-600/30 dark:shadow-indigo-900/50">
-                <img src="public/profile.jpeg" alt="GOKUL"  className="w-full h-full object-cover object-top"/>
+                <img src="profile.jpeg" alt="GOKUL"  className="w-full h-full object-cover object-top"/>
               </div>
             </div>
           </div>
