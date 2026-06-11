@@ -87,25 +87,32 @@ export default function Contact() {
   const handleChange = (e) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSending(true);
-    try {
-      const res  = await fetch( `${import.meta.env.VITE_API_URL}/api/contact`, {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify(form),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to send message.');
-      setToast({ type: 'success', message: "Message sent! I'll get back to you soon." });
-      setForm(EMPTY);
-    } catch (err) {
-      setToast({ type: 'error', message: err.message || 'Something went wrong. Please try again.' });
-    } finally {
-      setSending(false);
-    }
-  };
+import emailjs from '@emailjs/browser';
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setSending(true);
+  try {
+    await emailjs.send(
+      'service_alaa4eq',    // 
+      'template_uqvm2vr',   // 
+      {
+        from_name: form.name,
+        from_email: form.email,
+        subject: form.subject,
+        message: form.message,
+        to_email: 'gokulprabakaran05@gmail.com',
+      },
+      '5XC4koAyY5t5rLEw9'     // 
+    );
+    setToast({ type: 'success', message: "Message sent! I'll get back to you soon." });
+    setForm(EMPTY);
+  } catch (err) {
+    setToast({ type: 'error', message: 'Something went wrong. Please try again.' });
+  } finally {
+    setSending(false);
+  }
+};
 
   return (
     <>

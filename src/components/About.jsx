@@ -69,7 +69,7 @@ export default function About() {
                 style={{ '--bg-color': 'var(--about-bg, #111827)' }}
               >
                 <div className="w-64 h-72 md:w-72 md:h-80 rounded-2xl bg-linear-to-br from-indigo-600 via-purple-600 to-indigo-800 flex items-center justify-center overflow-hidden shadow-2xl shadow-indigo-600/30 dark:shadow-indigo-900/40">
-                  <span className="text-white text-8xl font-extrabold select-none">G</span>
+                  <img src="public/profile.jpeg" alt="Gokul" className='w-full h-full object-cover object-top'/>
                 </div>
               </div>
             </div>
