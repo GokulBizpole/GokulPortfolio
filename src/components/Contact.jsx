@@ -1,3 +1,4 @@
+import emailjs from '@emailjs/browser';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -87,32 +88,30 @@ export default function Contact() {
   const handleChange = (e) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-import emailjs from '@emailjs/browser';
-
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setSending(true);
-  try {
-    await emailjs.send(
-      'service_alaa4eq',    // 
-      'template_uqvm2vr',   // 
-      {
-        from_name: form.name,
-        from_email: form.email,
-        subject: form.subject,
-        message: form.message,
-        to_email: 'gokulprabakaran05@gmail.com',
-      },
-      '5XC4koAyY5t5rLEw9'     // 
-    );
-    setToast({ type: 'success', message: "Message sent! I'll get back to you soon." });
-    setForm(EMPTY);
-  } catch (err) {
-    setToast({ type: 'error', message: 'Something went wrong. Please try again.' });
-  } finally {
-    setSending(false);
-  }
-};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSending(true);
+    try {
+      await emailjs.send(
+        'service_alaa4eq',
+        'template_uqvm2vr',
+        {
+          from_name: form.name,
+          from_email: form.email,
+          subject: form.subject,
+          message: form.message,
+          to_email: 'gokulprabakaran05@gmail.com',
+        },
+        '5XC4koAyY5t5rLEw9'
+      );
+      setToast({ type: 'success', message: "Message sent! I'll get back to you soon." });
+      setForm(EMPTY);
+    } catch (err) {
+      setToast({ type: 'error', message: 'Something went wrong. Please try again.' });
+    } finally {
+      setSending(false);
+    }
+  };
 
   return (
     <>
