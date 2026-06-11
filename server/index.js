@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 5000;
 
 /* ─── Middleware ─────────────────────────────────────────────────────────── */
 app.use(cors({
-  origin:      process.env.FRONTEND_URL || 'http://localhost:5174',
+  origin:      process.env.FRONTEND_URL,
   methods:     ['POST'],
   credentials: false,
 }));
@@ -18,11 +18,17 @@ app.use(express.json({ limit: '10kb' }));
 
 /* ─── Nodemailer transporter ─────────────────────────────────────────────── */
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
+  requireTLS: true,
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,   // Gmail App Password (not account password)
+    pass: process.env.EMAIL_PASS,
   },
+  tls: {
+    rejectUnauthorized: false
+  }
 });
 
 /* Verify SMTP credentials once on startup */
